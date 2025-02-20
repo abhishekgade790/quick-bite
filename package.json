@@ -1,0 +1,29 @@
+{
+  "name": "namaste-react",
+  "version": "1.0.0",
+  "description": "building react app",
+  "scripts": {
+    "start": "index.html",
+    "test": "jest"
+  },
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abhishekgade790/namste-react"
+  },
+  "author": "Abhishek Gade",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abhishekgade790/namste-react/issues"
+  },
+  "homepage": "https://github.com/abhishekgade790/namste-react#reademe",
+  "devDependencies": {
+    "parcel": "^2.13.3",
+    "process": "^0.11.10"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "reactdom": "^2.0.0"
+  }
+}
