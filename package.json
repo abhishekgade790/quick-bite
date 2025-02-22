@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "building react app",
   "scripts": {
-    "start": "index.html",
+    "start": "parcel index.html",
+    "build": "parcel build index.html",
     "test": "jest"
   },
   "keywords": [],
