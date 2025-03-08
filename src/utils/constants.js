@@ -1,0 +1,2 @@
+export const LOGO_URL ="https://marketplace.canva.com/EAGIYM8_6rs/1/0/800w/canva-ip2-01ABbAI.jpg";
+export const CDN_URL ="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/";
