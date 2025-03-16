@@ -19,10 +19,14 @@
   },
   "homepage": "https://github.com/abhishekgade790/namste-react#reademe",
   "devDependencies": {
+    "autoprefixer": "^10.4.21",
     "parcel": "^2.13.3",
-    "process": "^0.11.10"
+    "postcss": "^8.5.3",
+    "process": "^0.11.10",
+    "tailwindcss": "^4.0.14"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.0.14",
     "http-proxy-middleware": "^3.0.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

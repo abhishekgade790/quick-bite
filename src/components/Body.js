@@ -3,14 +3,18 @@ import { useState, useEffect } from "react";
 import ShimmerUI from "./shimmerUI";
 import { Link } from "react-router-dom";
 import useFetch from "../utils/useFetch";
-import useFilter from "../utils/useFilter"; // ✅ Import custom hook
+import useFilter from "../utils/useFilter"; 
+import useOnlineStatus from "../utils/useOnlineStatus";
 
 const Body = () => {
   const [restaurantsList, setRestaurants] = useState([]);
   const [originalRestaurantsList, setOriginalRestaurants] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  
   const fetchedRestaurants = useFetch();
+
+  const isOnline = useOnlineStatus();
+ 
+
 
   useEffect(() => {
     if (fetchedRestaurants) {
@@ -19,12 +23,18 @@ const Body = () => {
     }
   }, [fetchedRestaurants]);
 
-  // ✅ Use the custom hook
+
   const { filterTopRated, resetFilter, isFiltered } = useFilter(
     restaurantsList,
     originalRestaurantsList
   );
 
+
+  if (!isOnline) {
+    return (
+      <h1>"Looks like You are offline!!! Check your internet connection."</h1>
+    );
+  }
   return originalRestaurantsList.length === 0 ? (
     <ShimmerUI />
   ) : (
