@@ -1,17 +1,24 @@
 import { useEffect, useState } from "react";
-import { CDN_URL, MENU_API } from "../utils/constants";
+import { CDN_URL } from "../utils/constants";
 import { useParams } from "react-router-dom";
 import useFetchMenu from "../utils/useFetchMenu";
+import ShimmerUI from "./shimmerUI";
+import RestaurantCategory from "./RestaurantCategory";
 
 const RestaurantMenu = () => {
-  const [searchValue, setSearchValue] = useState("");
   const { resId } = useParams();
 
-  const { resInfo, offerCard, menuCard, originalMenuCard, setMenuCard } =
+  const { resInfo, offerCard, menuCard, categories, setMenuCard } =
     useFetchMenu(resId);
 
+  const [showIndex, setShowIndex] = useState(null);
+
   if (!resInfo) {
-    return <div>Loading...</div>;
+    return (
+      <div className="text-center text-xl font-bold mt-10">
+        <ShimmerUI />
+      </div>
+    );
   }
 
   const {
@@ -23,101 +30,66 @@ const RestaurantMenu = () => {
     totalRatingsString,
     sla,
   } = resInfo;
+
   return (
-    <div className="restaurant-menu-wrapper">
-      <div className="resInfoContainer">
-        <div className="resName-label">
-          <h1>{name}</h1>
+    <div className="min-h-screen bg-gray-100 p-6 md:px-24">
+      {/* Restaurant Info */}
+      <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+        <h1 className="text-2xl font-bold text-gray-800">{name}</h1>
+        <div className="mt-2 text-gray-600">
+          <p className="font-semibold">{cuisines.join(", ")}</p>
+          <p>Outlet: {areaName}</p>
+          <p>{sla.slaString}</p>
         </div>
-        <div className="res-rating-div">
-          <div className="rating-label">
-            ⭐{avgRating}({totalRatingsString}) • {costForTwoMessage}
-          </div>
-          <div className="cuisines-label">{cuisines.join(", ")}</div>
-          <div>Outlet {areaName}</div>
-          <div>{sla.slaString}</div>
+        <div className="mt-2 flex items-center gap-4">
+          <span className="bg-green-500 text-white px-3 py-1 rounded-md font-bold">
+            ⭐ {avgRating} ({totalRatingsString})
+          </span>
+          <span className="text-gray-700">{costForTwoMessage}</span>
         </div>
       </div>
 
-      <div className="offer-container">
-        {offerCard &&
-          offerCard.map((offer) => {
-            const { couponCode, header, offerLogo, offerIds } = offer.info;
-            return (
-              <div className="offer-card" key={offerIds[0]}>
-                <div className="offer-logo">
-                  <img
-                    src={
-                      "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_96,h_96/" +
-                      offerLogo
-                    }
-                    alt="offer-logo"
-                  />
-                </div>
-                <div className="offer-header">
-                  <h3>{header}</h3>
-                  <p>{couponCode}</p>
-                </div>
+      {/* Offers */}
+      <div className="offer-container flex overflow-x-auto gap-4 p-4 scrollbar-hide">
+        {offerCard?.map(
+          ({ info: { couponCode, header, offerLogo, offerIds } }) => (
+            <div
+              className="offer-card flex min-w-[260px] items-center gap-3 p-4 rounded-lg bg-white shadow-md transition-transform duration-300 hover:scale-105"
+              key={offerIds[0]}
+            >
+              <img
+                className="w-12 h-12 object-contain"
+                src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_96,h_96/${offerLogo}`}
+                alt="offer-logo"
+              />
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800">
+                  {header}
+                </h3>
+                <p className="text-sm text-gray-600">{couponCode}</p>
               </div>
-            );
-          })}
+            </div>
+          )
+        )}
       </div>
 
-      {/* Menu */}
+      {/*restaurants categories  accordion*/}
 
-      <div className="menu-container">
-        <h1>Menu</h1>
-        <div className="search-dish">
-          <input
-            type="text"
-            placeholder="Search Dishes"
-            value={searchValue}
-            onChange={(e) => {
-              setSearchValue(e.target.value);
-              const filterMenu = originalMenuCard.filter((menu) =>
-                menu.card.info.name
-                  .toLowerCase()
-                  .includes(e.target.value.toLowerCase())
-              );
-              setMenuCard(filterMenu);
-            }}
+      <div>
+        {categories.map((category) => (
+          <RestaurantCategory
+            key={category?.card?.card?.categoryId}
+            data={category?.card?.card}
+            showItems={showIndex === category?.card?.card?.categoryId}
+            setShowIndex={() =>
+              setShowIndex((prevIndex) =>
+                prevIndex === category?.card?.card?.categoryId
+                  ? null
+                  : category?.card?.card?.categoryId
+              )
+            }
           />
-        </div>
-        <div className="menu-items">
-          {menuCard &&
-            menuCard.map((menu) => {
-              const {
-                category,
-                defaultPrice,
-                description,
-                id,
-                imageId,
-                name,
-                ratings,
-              } = menu?.card?.info;
-
-              return (
-                <div key={id}>
-                  <div className="menu-item">
-                    <div className="menu-data">
-                      <h3>
-                        {name} - {category}
-                      </h3>
-                      <p>₹{defaultPrice / 100}</p>
-                      <p>
-                        ⭐{ratings.aggregatedRating.rating}(
-                        {ratings.aggregatedRating.ratingCountV2})
-                      </p>
-                      <p>{description}</p>
-                    </div>
-                    <div className="menu-item-image">
-                      <img src={CDN_URL + imageId} alt={name} />
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-        </div>
+        ))}
       </div>
     </div>
   );

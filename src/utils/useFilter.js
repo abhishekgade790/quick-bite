@@ -4,10 +4,6 @@ const useFilter = (restaurantsList, originalRestaurantsList) => {
   const [isFiltered, setIsFiltered] = useState(false);
 
   const filterTopRated = (setRestaurants) => {
-    document.querySelector(".top-rated-div").style.backgroundColor = "#333";
-    document.querySelector(".top-rated-div").style.color = "white";
-    document.querySelector(".filter-btn").style.color = "white";
-
     const filteredList = restaurantsList.filter(
       (res) => res.info.avgRating >= 4.6
     );
@@ -16,9 +12,6 @@ const useFilter = (restaurantsList, originalRestaurantsList) => {
   };
 
   const resetFilter = (setRestaurants) => {
-    document.querySelector(".top-rated-div").style.backgroundColor = "white";
-    document.querySelector(".filter-btn").style.color = "black";
-
     setRestaurants(originalRestaurantsList);
     setIsFiltered(false);
   };

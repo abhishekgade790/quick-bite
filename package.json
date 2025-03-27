@@ -10,7 +10,7 @@
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/abhishekgade790/namste-react"
+    "url": "git+https://github.com/abhishekgade790/namste-react.git"
   },
   "author": "Abhishek Gade",
   "license": "ISC",
@@ -19,19 +19,24 @@
   },
   "homepage": "https://github.com/abhishekgade790/namste-react#reademe",
   "devDependencies": {
+    "@parcel/rust": "^2.13.3",
     "autoprefixer": "^10.4.21",
     "parcel": "^2.13.3",
     "postcss": "^8.5.3",
-    "process": "^0.11.10",
-    "tailwindcss": "^4.0.14"
+    "process": "^0.11.10"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.6.1",
     "@tailwindcss/postcss": "^4.0.14",
-    "http-proxy-middleware": "^3.0.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-icons": "^5.5.0",
+    "react-redux": "^9.2.0",
     "react-router": "^7.3.0",
     "react-router-dom": "^6.30.0",
-    "reactdom": "^2.0.0"
-  }
+    "react-toastify": "^11.0.5",
+    "tailwind-scrollbar-hide": "^2.0.0",
+    "tailwindcss": "^4.0.14"
+  },
+  "main": "index.js"
 }

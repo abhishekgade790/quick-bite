@@ -5,11 +5,11 @@ const useFetchMenu = (resId) => {
   const [resInfo, setResInfo] = useState(null);
   const [offerCard, setOfferCard] = useState([]);
   const [menuCard, setMenuCard] = useState([]);
-  const [originalMenuCard, setOriginalMenuCard] = useState([]);
+  const [categories, setcategories] = useState([]);
 
   useEffect(() => {
     fetchMenu();
-  }, []);
+  }, [resId]); // Ensures re-fetching when resId changes
 
   const fetchMenu = async () => {
     try {
@@ -23,21 +23,23 @@ const useFetchMenu = (resId) => {
           []
       );
 
-      const fetchedMenu =
-        json?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards || [];
+      const fetchedMenu = json?.data?.cards[4]?.groupedCard?.cardGroupMap
+        ?.REGULAR || { cards: [] };
 
-      const allItems = fetchedMenu
-        .flatMap((category) => category?.card?.card?.itemCards || [])
-        .filter((item) => item?.card?.info);
+      const allItems = fetchedMenu.cards.filter(
+        (item) =>
+          item?.card?.card?.["@type"] ===
+          "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
+      );
 
       setMenuCard(allItems);
-      setOriginalMenuCard(allItems);
+      setcategories(allItems);
     } catch (error) {
       console.error("Error fetching menu:", error);
     }
   };
 
-  return { resInfo, offerCard, menuCard, originalMenuCard, setMenuCard };
+  return { resInfo, offerCard, menuCard, categories, setMenuCard };
 };
 
 export default useFetchMenu;
