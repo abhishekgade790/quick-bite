@@ -14,6 +14,7 @@ import appStore from "./store/appStore.js";
 import Cart from "./components/Cart.js";
 
 import { lazy, Suspense } from "react";
+import GroceryShop from "./components/GroceryShop.js";
 
 const Grocery = lazy(() => import("./components/Grocery.js"));
 
@@ -34,22 +35,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <AppLayout />,
     children: [
-      {
-        path: "/",
-        element: <Body />,
-      },
-      {
-        path: "/about",
-        element: <About />,
-      },
-      {
-        path: "/contact",
-        element: <Contact />,
-      },
-      {
-        path: "/Login",
-        element: <Login />,
-      },
+      { path: "/", element: <Body /> },
+      { path: "/about", element: <About /> },
+      { path: "/contact", element: <Contact /> },
+      { path: "/login", element: <Login /> },
       {
         path: "/grocery",
         element: (
@@ -58,14 +47,9 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
-      {
-        path: "/restaurants/:resId",
-        element: <RestaurantMenu />,
-      },
-      {
-        path: "/cart",
-        element: <Cart />,
-      },
+      { path: "/restaurants/:resId", element: <RestaurantMenu /> },
+      { path: "/cart", element: <Cart /> },
+      { path: "/grocery-shop", element: <GroceryShop /> },
     ],
     errorElement: <Error />,
   },

@@ -1,0 +1,73 @@
+// src/constants/groceryItems.js
+export const groceryItems = [
+  {
+    id: 1,
+    name: "Fresh Apples",
+    category: "Fruits",
+    price: "₹120/kg",
+    image: "https://img.freepik.com/free-photo/apples-red-fresh-mellow-juicy-perfect-whole-white-desk_179666-271.jpg?ga=GA1.1.2004696052.1740219507&semt=ais_hybrid&w=740",
+  },
+  {
+    id: 2,
+    name: "Organic Spinach",
+    category: "Vegetables",
+    price: "₹60/bunch",
+    image: "https://img.freepik.com/free-photo/close-up-photo-fresh-spinach_176420-7294.jpg?ga=GA1.1.2004696052.1740219507&semt=ais_hybrid&w=740",
+  },
+  {
+    id: 3,
+    name: "Natural Milk",
+    category: "Dairy",
+    price: "₹50/litre",
+    image: "https://img.freepik.com/free-vector/milk-advertising-realistic-poster_1284-26187.jpg?ga=GA1.1.2004696052.1740219507&semt=ais_hybrid&w=740",
+  },
+  {
+    id: 4,
+    name: "Bananas",
+    category: "Fruits",
+    price: "₹60/dozen",
+    image: "https://img.freepik.com/premium-photo/ripe-bananas-bunch_78361-10.jpg?ga=GA1.1.2004696052.1740219507&semt=ais_hybrid&w=740",
+  },
+  {
+    id: 5,
+    name: "Carrots",
+    category: "Vegetables",
+    price: "₹40/kg",
+    image: "https://img.freepik.com/free-photo/stack-carrots-bowl-marble_114579-65075.jpg?ga=GA1.1.2004696052.1740219507&semt=ais_hybrid&w=740",
+  },
+  {
+    id: 6,
+    name: "Fresh Tomatoes",
+    category: "Vegetables",
+    price: "₹50/kg",
+    image: "https://img.freepik.com/free-photo/fresh-red-tomatoes_2829-13449.jpg?ga=GA1.1.2004696052.1740219507&semt=ais_hybrid&w=740",
+  },
+  {
+    id: 7,
+    name: "Cheese",
+    category: "Dairy",
+    price: "₹200/kg",
+    image: "https://img.freepik.com/free-vector/emmental-cheese-wedge-with-thin-slices-swiss-italian-dairy-fresh-organic-product_1441-1612.jpg?ga=GA1.1.2004696052.1740219507&semt=ais_hybrid&w=740",
+  },
+  {
+    id: 8,
+    name: "Eggs",
+    category: "Dairy",
+    price: "₹90/dozen",
+    image: "https://img.freepik.com/free-photo/front-view-white-chicken-eggs-inside-basket-with-towel-dark-surface_140725-103357.jpg?ga=GA1.1.2004696052.1740219507&semt=ais_hybrid&w=740",
+  },
+  {
+    id: 9,
+    name: "Wheat Flour",
+    category: "Pantry Essentials",
+    price: "₹40/kg",
+    image: "https://img.freepik.com/premium-photo/whole-grain-wheat-flour-isolated-white-wheat-flour-filled-wooden-bowl_448865-1576.jpg?ga=GA1.1.2004696052.1740219507&semt=ais_hybrid&w=740",
+  },
+  {
+    id: 10,
+    name: "Salt",
+    category: "Pantry Essentials",
+    price: "₹20/kg",
+    image: "https://img.freepik.com/free-photo/sea-salt-coming-out-open-salt-shaker-with-its-cap_176474-1688.jpg?ga=GA1.1.2004696052.1740219507&semt=ais_hybrid&w=740",
+  },
+];
