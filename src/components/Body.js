@@ -209,7 +209,7 @@ const Body = () => {
       </div>
 
       {/* Restaurant List */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
         {restaurantsList.map((res) => (
           <Link key={res.info.id} to={"/restaurants/" + res.info.id}>
             <RestaurantCard resData={res} />

@@ -15,6 +15,15 @@ const Grocery = () => {
           Get fresh groceries delivered to your doorstep at the best prices!
           Explore a wide range of fruits, vegetables, dairy, snacks, and more.
         </p>
+        {/* CTA Button */}
+        <div className="mt-10 flex justify-center">
+          <button
+            className="bg-green-500 text-white px-6 py-3 text-base sm:text-lg rounded-lg shadow-md hover:bg-green-600 transition-all duration-300"
+            onClick={() => navigate("/grocery-shop")}
+          >
+            Shop Now 🛍️
+          </button>
+        </div>
 
         {/* Categories */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
@@ -56,16 +65,6 @@ const Grocery = () => {
               </p>
             </div>
           ))}
-        </div>
-
-        {/* CTA Button */}
-        <div className="mt-10 flex justify-center">
-          <button
-            className="bg-green-500 text-white px-6 py-3 text-base sm:text-lg rounded-lg shadow-md hover:bg-green-600 transition-all duration-300"
-            onClick={() => navigate("/grocery-shop")}
-          >
-            Shop Now 🛍️
-          </button>
         </div>
       </div>
     </div>

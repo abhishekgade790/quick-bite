@@ -1,102 +1,101 @@
 import React, { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { login } from "../store/loginStatusSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-const Auth = () => {
-  const [isLogin, setIsLogin] = useState(true); // Toggle Login & Signup
+const Login = () => {
+  const dispatch = useDispatch();
+  const { isLogin, user } = useSelector((state) => state.loginStatus);
+
+  const [isLoginMode, setIsLoginMode] = useState(true);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showInputs, setShowInputs] = useState(false);
-
-  const handleEnter = () => {
-    setShowInputs(true);
-  };
+  const navigate = useNavigate();
 
   const handleAuth = () => {
-    if (isLogin) {
-      // Login logic
+    if (isLoginMode) {
       if (username === "admin" && password === "admin") {
-        setIsAuthenticated(true);
+        dispatch(login({ username }));
+        navigate("/");
       } else {
         setError("Invalid username or password");
       }
     } else {
-      // Signup logic
       if (!username || !password || !confirmPassword) {
         setError("All fields are required");
       } else if (password !== confirmPassword) {
         setError("Passwords do not match");
       } else {
-        setIsAuthenticated(true);
+        dispatch(login({ username }));
+        navigate("/");
       }
     }
   };
 
-  if (isAuthenticated) {
-    return <Navigate to="/" />;
-  }
-
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h1 className="text-2xl font-bold text-center text-orange-600">
-          {isLogin ? "Login" : "Sign Up"}
-        </h1>
-
-        {!showInputs ? (
-          <button
-            className="w-full mt-4 bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition-all"
-            onClick={handleEnter}
-          >
-            Enter
-          </button>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 px-4">
+      <div className="bg-white shadow-2xl rounded-2xl w-full max-w-md p-8">
+        {isLogin ? (
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-orange-600 mb-4">
+              Welcome back, {user.username}!
+            </h1>
+            <p className="text-gray-600">You're already logged in.</p>
+            <button className="bg-orange-500 m-4 py-1 px-4 text-white rounded-lg hover:bg-orange-600 cursor-pointer" onClick={()=>{navigate("/")}}>HOME</button>
+          </div>
         ) : (
           <>
-            <div className="mt-4">
+            <h2 className="text-2xl font-semibold text-center text-orange-600">
+              {isLoginMode ? "Login to Your Account" : "Create an Account"}
+            </h2>
+
+            <div className="mt-6 space-y-4">
               <input
                 type="text"
                 placeholder="Username"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-orange-500"
               />
-            </div>
-
-            <div className="mt-4">
               <input
                 type="password"
                 placeholder="Password"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-orange-500"
               />
-            </div>
-
-            {!isLogin && (
-              <div className="mt-4">
+              {!isLoginMode && (
                 <input
                   type="password"
                   placeholder="Confirm Password"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-orange-500"
                 />
-              </div>
-            )}
-
-            {error && <p className="text-red-500 text-center mt-2">{error}</p>}
-
-            <button
-              className="w-full mt-4 bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition-all"
-              onClick={handleAuth}
-            >
-              {isLogin ? "Login" : "Sign Up"}
-            </button>
+              )}
+              {error && (
+                <p className="text-red-500 text-sm text-center">{error}</p>
+              )}
+              <button
+                onClick={handleAuth}
+                className="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 transition-all"
+              >
+                {isLoginMode ? "Login" : "Sign Up"}
+              </button>
+            </div>
 
             <p
-              className="text-center text-sm text-gray-600 mt-4 cursor-pointer"
-              onClick={() => setIsLogin(!isLogin)}
+              className="text-sm text-center mt-4 text-gray-600 cursor-pointer hover:underline"
+              onClick={() => {
+                setIsLoginMode(!isLoginMode);
+                setError("");
+              }}
             >
-              {isLogin ? "Don't have an account? Sign up" : "Already have an account? Login"}
+              {isLoginMode
+                ? "Don't have an account? Sign up"
+                : "Already have an account? Login"}
             </p>
           </>
         )}
@@ -105,4 +104,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default Login;

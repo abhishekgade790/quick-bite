@@ -4,90 +4,126 @@ import {
   decrementGroceryQuantity,
   removeGroceryItem,
   clearGroceryItems,
-} from "../redux/groceryCartSlice";
+} from "../store/groceryCartSlice";
+import { Link } from "react-router-dom";
 
 const GroceryCart = () => {
   const cartItems = useSelector((state) => state.groceryCart.items);
   const dispatch = useDispatch();
+  const subTotal = cartItems.reduce((acc, item) => {
+    const price = parseFloat(item.price.replace(/[^\d.]/g, ""));
+    return acc + price * item.quantity;
+  }, 0);
 
-  const getTotal = () => {
-    return cartItems.reduce((acc, item) => {
-      const price = parseFloat(item.card.info.price.replace(/[^\d.]/g, ""));
-      return acc + price * item.quantity;
-    }, 0);
-  };
+  const tax = subTotal * 0.1;
+  const totalAmount = subTotal + tax;
 
   if (cartItems.length === 0) {
     return (
-      <div className="text-center py-20 text-xl text-gray-600">
-        🛒 Your grocery cart is empty.
+      <div className="h-100 flex flex-col items-center justify-center py-20 text-center space-y-6 text-gray-600">
+        <div className="text-2xl">🛒 Your grocery cart is empty.</div>
+        <Link
+          to="/grocery-shop"
+          className="bg-green-600 text-white px-6 py-2 rounded-lg text-lg hover:bg-green-700 transition"
+        >
+          Shop Now
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-green-700 mb-6 text-center">
+    <div className="max-w-4xl mx-auto my-10 px-8 bg-white">
+      <h1 className="text-3xl font-bold text-center mb-8 text-green-600">
         Grocery Cart
       </h1>
 
-      <div className="space-y-6">
+      <div className="space-y-3 bg-gray-100 rounded-xl shadow-sm p-4">
         {cartItems.map((item) => (
           <div
-            key={item.card.info.id}
-            className="flex flex-col md:flex-row items-center bg-white rounded-lg shadow p-4 gap-6"
+            key={item.id}
+            className="flex items-center justify-between border-b border-gray-200 py-2"
           >
-            <img
-              src={item.card.info.image}
-              alt={item.card.info.name}
-              className="w-28 h-28 object-cover rounded"
-            />
-            <div className="flex-1 w-full">
-              <h2 className="text-xl font-semibold text-green-800">
-                {item.card.info.name}
-              </h2>
-              <p className="text-sm text-gray-500">{item.card.info.category}</p>
-              <p className="text-md text-gray-800 font-bold mt-1">
-                {item.card.info.price}
-              </p>
-
-              <div className="flex items-center justify-between mt-4 w-full md:w-64">
-                <button
-                  onClick={() => dispatch(decrementGroceryQuantity(item.card.info.id))}
-                  className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
-                >
-                  -
-                </button>
-                <span className="text-lg font-bold">{item.quantity}</span>
-                <button
-                  onClick={() => dispatch(incrementGroceryQuantity(item.card.info.id))}
-                  className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
-                >
-                  +
-                </button>
+            {/* Item Info */}
+            <div className="flex items-center space-x-4 w-2/3">
+              <img
+                src={item.image}
+                alt={item.name}
+                className="w-16 h-16 object-cover rounded-md"
+              />
+              <div>
+                <h2 className="font-medium">{item.name}</h2>
+                <p className="text-sm text-gray-500">{item.category}</p>
               </div>
             </div>
 
-            <button
-              onClick={() => dispatch(removeGroceryItem(item.card.info.id))}
-              className="text-red-500 font-semibold hover:underline mt-4 md:mt-0"
-            >
-              Remove
-            </button>
+            {/* Quantity Controls */}
+            <div className="flex items-center space-x-2 border-2 border-gray-300 text-green-600 rounded-lg">
+              <button
+                onClick={() =>
+                  item.quantity === 1
+                    ? dispatch(removeGroceryItem(item.id))
+                    : dispatch(decrementGroceryQuantity(item.id))
+                }
+                className="px-3 font-bold text-2xl"
+              >
+                -
+              </button>
+              <span className="text-lg font-semibold">{item.quantity}</span>
+              <button
+                onClick={() => dispatch(incrementGroceryQuantity(item.id))}
+                className="px-3 font-bold text-2xl"
+              >
+                +
+              </button>
+            </div>
+
+            {/* Price */}
+            <div className="text-gray-700 font-medium text-right min-w-[80px]">
+              ₹
+              {(
+                parseFloat(item.price.replace(/[^\d.]/g, "")) * item.quantity
+              ).toFixed(2)}
+            </div>
           </div>
         ))}
-      </div>
 
-      <div className="mt-10 text-right">
-        <p className="text-xl font-bold text-gray-800">
-          Total: ₹{getTotal().toFixed(2)}
-        </p>
-        <button
-          onClick={() => dispatch(clearGroceryItems())}
-          className="mt-3 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-        >
-          Clear Cart
-        </button>
+        {/* Bill Summary */}
+        <div className="mt-8 p-4 border-t-2 border-gray-300">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+            Bill Summary
+          </h2>
+
+          <div className="flex justify-between mb-2">
+            <span className="text-lg font-medium">Subtotal:</span>
+            <span className="text-lg">₹{subTotal.toFixed(2)}</span>
+          </div>
+
+          <div className="flex justify-between mb-2">
+            <span className="text-lg font-medium">Tax (10%):</span>
+            <span className="text-lg">₹{tax.toFixed(2)}</span>
+          </div>
+
+          <div className="flex justify-between mt-4 border-t-2 pt-4">
+            <span className="text-xl font-bold">Total Amount:</span>
+            <span className="text-xl font-bold text-green-600">
+              ₹{totalAmount.toFixed(2)}
+            </span>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6">
+            <button className="w-full sm:w-1/2 bg-green-600 text-white py-2 rounded-lg text-lg hover:bg-green-700 transition">
+              Proceed to Checkout
+            </button>
+            <button
+              onClick={() => dispatch(clearGroceryItems())}
+              className="w-full sm:w-1/2 bg-red-500 text-white py-2 rounded-lg text-lg hover:bg-red-600 transition"
+            >
+              Clear Cart
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,12 +1,14 @@
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CDN_URL } from "../utils/constants";
 import { addItem, incrementQuantity, decrementQuantity } from "../store/cartSlice";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ItemList = ({ items }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
 
-  // Helper to get item quantity from cart
   const getItemQuantity = (itemId) => {
     const cartItem = cartItems.find((item) => item.card.info.id === itemId);
     return cartItem ? cartItem.quantity : 0;
@@ -14,14 +16,17 @@ const ItemList = ({ items }) => {
 
   const handleAddItem = (item) => {
     dispatch(addItem({ ...item, quantity: 1 }));
+    toast.success(`${item.card.info.name} added to cart!`);
   };
 
   const handleIncrement = (itemId) => {
     dispatch(incrementQuantity(itemId));
+    toast.info("Item quantity increased");
   };
 
   const handleDecrement = (itemId) => {
     dispatch(decrementQuantity(itemId));
+    toast.info("Item quantity decreased");
   };
 
   return (
@@ -94,6 +99,19 @@ const ItemList = ({ items }) => {
           </div>
         );
       })}
+
+      {/* Toast Container with centered messages */}
+      <ToastContainer 
+        position="top-center" // Position the toast at the top center
+        autoClose={1000} // Duration before the toast disappears
+        hideProgressBar={false} // Show progress bar
+        newestOnTop={false} // Newest toast on top
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

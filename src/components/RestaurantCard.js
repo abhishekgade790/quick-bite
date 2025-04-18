@@ -13,7 +13,7 @@ const RestaurantCard = ({ resData }) => {
   } = resData.info;
 
   return (
-    <div className="flex flex-col m-4 p-4 w-80 h-full bg-white shadow-lg rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-xl">
+    <div className="flex flex-col p-4 w-70 h-full bg-white shadow-lg rounded-xl transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-xl">
       {/* Image Section */}
       <ImageSection
         imgId={cloudinaryImageId}
@@ -40,7 +40,7 @@ const RestaurantCard = ({ resData }) => {
 
 const ImageSection = ({ imgId, name, disData }) => {
   return (
-    <div className="relative w-full h-auto rounded-xl overflow-hidden">
+    <div className="relative w-full h-70 rounded-xl overflow-hidden">
       <label className="absolute bottom-0 left-0 p-2 w-full bg-gradient-to-t from-gray-950 to-0& text-white font-extrabold font">
         {disData?.header} {disData?.subHeader}
       </label>

@@ -6,6 +6,7 @@ import {
   decrementGroceryQuantity,
 } from "../store/groceryCartSlice";
 import { groceryItems } from "../utils/groceryItems";
+import toast from "react-hot-toast";
 
 const GroceryShop = () => {
   const dispatch = useDispatch();
@@ -13,13 +14,22 @@ const GroceryShop = () => {
 
   const handleAddToCart = (item) => {
     dispatch(addGroceryItem({ ...item, quantity: 1 }));
+    toast.success(`${item.name} added to cart!`);
   };
 
   const handleIncrement = (id) => {
     dispatch(incrementGroceryQuantity(id));
+    const item = groceryItems.find((i) => i.id === id);
+    toast.success(`Increased ${item.name} quantity`);
   };
 
   const handleDecrement = (id) => {
+    const item = cartItems.find((i) => i.id === id);
+    if (item.quantity === 1) {
+      toast.error(`${item.name} removed from cart`);
+    } else {
+      toast.success(`Decreased ${item.name} quantity`);
+    }
     dispatch(decrementGroceryQuantity(id));
   };
 

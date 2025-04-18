@@ -15,17 +15,17 @@ import Cart from "./components/Cart.js";
 
 import { lazy, Suspense } from "react";
 import GroceryShop from "./components/GroceryShop.js";
+import { Toaster } from "react-hot-toast";
 
 const Grocery = lazy(() => import("./components/Grocery.js"));
 
 const AppLayout = () => {
   return (
     <div className="app-layout">
-      <Provider store={appStore}>
-        <Header />
-        <Outlet />
-        <Footer />
-      </Provider>
+      <Toaster position="top-center" />
+      <Header />
+      <Outlet />
+      <Footer />
     </div>
   );
 };
@@ -56,4 +56,8 @@ const router = createBrowserRouter([
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<RouterProvider router={router} />);
+root.render(
+  <Provider store={appStore}>
+    <RouterProvider router={router} />
+  </Provider>
+);
