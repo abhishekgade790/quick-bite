@@ -1,14 +1,13 @@
 import { useSelector, useDispatch } from "react-redux";
-import {
-  incrementQuantity,
-  decrementQuantity,
-  removeItem,
-  clearItems,
-} from "../store/cartSlice";
-import { Link } from "react-router-dom"; // For navigation to shopping page
+import { incrementQuantity, decrementQuantity, removeItem, clearItems } from "../store/cartSlice";
+import { Link, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";  // <-- Import toast
+import "react-toastify/dist/ReactToastify.css";
 
 const FoodCart = () => {
   const cartItems = useSelector((state) => state.cart.items);
+  const isLogin = useSelector((state) => state.loginStatus.isLogin);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const subTotal = cartItems.reduce((total, item) => {
@@ -21,8 +20,42 @@ const FoodCart = () => {
   const tax = subTotal * 0.1;
   const totalAmount = subTotal + tax;
 
+  const handleCheckout = () => {
+    if (isLogin) {
+      toast.success("Proceeding to payment... 🎉");
+      setTimeout(() => {
+        navigate("/food-payment");
+      }, 1500);  // Delay to show toast
+    } else {
+      toast.error("Please login to proceed to checkout.");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+    }
+  };
+
+  const handleClearCart = () => {
+    dispatch(clearItems());
+    toast.info("Cart cleared successfully!");
+  };
+
+  const handleIncrement = (id) => {
+    dispatch(incrementQuantity(id));
+    toast.success("Increased item quantity!");
+  };
+
+  const handleDecrement = (id, quantity) => {
+    if (quantity === 1) {
+      dispatch(removeItem(id));
+      toast.info("Item removed from cart.");
+    } else {
+      dispatch(decrementQuantity(id));
+      toast.info("Decreased item quantity.");
+    }
+  };
+
   return (
-    <div className="max-w-4xl mx-auto my-10 px-8 bg-white min-h-[60vh]">
+    <div className="max-w-4xl mx-auto my-10 px-8 bg-white min-h-[80vh]">
       <h1 className="text-3xl font-bold text-center mb-8 text-orange-500">
         Cart
       </h1>
@@ -34,7 +67,7 @@ const FoodCart = () => {
             to="/"
             className="inline-block bg-orange-500 text-white px-6 py-2 rounded-lg text-lg hover:bg-orange-600 transition"
           >
-             Add to cart
+            Add to Cart
           </Link>
         </div>
       ) : (
@@ -47,15 +80,9 @@ const FoodCart = () => {
             >
               <div className="font-medium w-2/3">{item.card.info.name}</div>
 
-              <div className="flex items-center space-x-2 border-2 border-gray-300 text-green-500 rounded-lg">
+              <div className="flex items-center space-x-2 border-2 border-gray-300 text-orange-500 rounded-lg">
                 <button
-                  onClick={() => {
-                    if (item.quantity === 1) {
-                      dispatch(removeItem(item.card.info.id));
-                    } else {
-                      dispatch(decrementQuantity(item.card.info.id));
-                    }
-                  }}
+                  onClick={() => handleDecrement(item.card.info.id, item.quantity)}
                   className="px-3 font-bold text-2xl transition"
                 >
                   -
@@ -64,9 +91,7 @@ const FoodCart = () => {
                 <span className="text-lg font-semibold">{item.quantity}</span>
 
                 <button
-                  onClick={() =>
-                    dispatch(incrementQuantity(item.card.info.id))
-                  }
+                  onClick={() => handleIncrement(item.card.info.id)}
                   className="px-3 font-bold text-2xl transition"
                 >
                   +
@@ -76,9 +101,8 @@ const FoodCart = () => {
               <div className="text-gray-700 text-right min-w-[80px]">
                 ₹
                 {(
-                  (item.card.info.price || item.card.info.defaultPrice) /
-                    100 *
-                    item.quantity
+                  ((item.card.info.price || item.card.info.defaultPrice) / 100) *
+                  item.quantity
                 ).toFixed(2)}
               </div>
             </div>
@@ -102,17 +126,21 @@ const FoodCart = () => {
 
             <div className="flex justify-between mt-4 border-t-2 pt-4">
               <span className="text-xl font-bold">Total Amount:</span>
-              <span className="text-xl font-bold text-green-600">
+              <span className="text-xl font-bold text-orange-600">
                 ₹{totalAmount.toFixed(2)}
               </span>
             </div>
 
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6">
-              <button className="w-full sm:w-1/2 bg-orange-500 text-white py-2 rounded-lg text-lg hover:bg-orange-600 transition">
+              <button
+                onClick={handleCheckout}
+                className="w-full sm:w-1/2 bg-orange-500 text-white py-2 rounded-lg text-lg hover:bg-orange-600 transition"
+              >
                 Proceed to Checkout
               </button>
+
               <button
-                onClick={() => dispatch(clearItems())}
+                onClick={handleClearCart}
                 className="w-full sm:w-1/2 bg-red-500 text-white py-2 rounded-lg text-lg hover:bg-red-600 transition"
               >
                 Clear Cart
@@ -121,6 +149,17 @@ const FoodCart = () => {
           </div>
         </div>
       )}
+
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnHover
+        draggable
+        pauseOnFocusLoss
+        theme="light"
+      />
     </div>
   );
 };

@@ -16,6 +16,8 @@ import Cart from "./components/Cart.js";
 import { lazy, Suspense } from "react";
 import GroceryShop from "./components/GroceryShop.js";
 import { Toaster } from "react-hot-toast";
+import GroceryPayment from "./components/GroceryPayment.js";
+import FoodPayment from "./components/FoodPayment.js";
 
 const Grocery = lazy(() => import("./components/Grocery.js"));
 
@@ -50,6 +52,8 @@ const router = createBrowserRouter([
       { path: "/restaurants/:resId", element: <RestaurantMenu /> },
       { path: "/cart", element: <Cart /> },
       { path: "/grocery-shop", element: <GroceryShop /> },
+      { path: "/grocery-payment", element: <GroceryPayment /> },
+      { path: "/food-payment", element: <FoodPayment /> },
     ],
     errorElement: <Error />,
   },
