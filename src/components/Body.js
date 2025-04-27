@@ -12,7 +12,6 @@ import {
 import { RestaurantCard } from "./RestaurantCard";
 import ShimmerUI from "./shimmerUI";
 import useFetch from "../utils/useFetch";
-import useFilter from "../utils/useFilter";
 import useOnlineStatus from "../utils/useOnlineStatus";
 
 const Body = () => {
@@ -25,15 +24,19 @@ const Body = () => {
     pureVeg: false,
   });
 
-  const fetchedRestaurants = useFetch();
+  // Fetch data from custom hook
+  const { resInfo, loading, error } = useFetch(); 
   const isOnline = useOnlineStatus();
 
   useEffect(() => {
-    if (fetchedRestaurants) {
-      setRestaurants(fetchedRestaurants);
-      setOriginalRestaurants(fetchedRestaurants);
+    // On successful data fetch, update the restaurant list
+    if (Array.isArray(resInfo)) {
+      setRestaurants(resInfo);
+      setOriginalRestaurants(resInfo);
     }
-  }, [fetchedRestaurants]);
+  }, [resInfo]);
+
+  console.log("Restaurants List:", restaurantsList); // Debugging line to check restaurant list
 
   const toggleFilter = (key) => {
     const newFilters = { ...filters, [key]: !filters[key] };
@@ -41,18 +44,18 @@ const Body = () => {
 
     let updated = [...originalRestaurantsList];
 
+    // Apply filter conditions
     if (newFilters.topRated) {
       updated = updated.filter((res) => res.info.avgRating > 4.2);
     }
-
     if (newFilters.fastDelivery) {
       updated = updated.filter((res) => res.info.sla?.deliveryTime <= 30);
     }
-
     if (newFilters.pureVeg) {
       updated = updated.filter((res) => res.info.veg === true);
     }
 
+    // Search functionality within filters
     if (searchValue.trim() !== "") {
       updated = updated.filter((res) =>
         res.info.name.toLowerCase().includes(searchValue.toLowerCase())
@@ -87,6 +90,7 @@ const Body = () => {
     setRestaurants(sorted);
   };
 
+  // If offline, display offline message
   if (!isOnline) {
     return (
       <h1 className="text-center text-xl font-bold text-red-500 mt-10">
@@ -95,9 +99,21 @@ const Body = () => {
     );
   }
 
-  return originalRestaurantsList.length === 0 ? (
-    <ShimmerUI />
-  ) : (
+  // If still loading, show shimmer UI
+  if (loading) {
+    return <ShimmerUI />;
+  }
+
+  // If error, show error message
+  if (error) {
+    return (
+      <h1 className="text-center text-xl font-bold text-red-500 mt-10">
+        {error}
+      </h1>
+    );
+  }
+
+  return (
     <div className="flex flex-col px-4 py-5 min-h-screen items-center bg-gray-50">
       {/* Search Bar */}
       <div className="flex items-center bg-white w-full max-w-xl justify-between rounded-lg shadow-md border">
@@ -111,6 +127,7 @@ const Body = () => {
             setSearchValue(text);
             let filtered = [...originalRestaurantsList];
 
+            // Apply filters while typing in search box
             if (filters.topRated) {
               filtered = filtered.filter((res) => res.info.avgRating > 4.2);
             }
@@ -123,6 +140,7 @@ const Body = () => {
               filtered = filtered.filter((res) => res.info.veg === true);
             }
 
+            // Filter search results based on input value
             if (text.trim() !== "") {
               filtered = filtered.filter((res) =>
                 res.info.name.toLowerCase().includes(text.toLowerCase())
@@ -137,7 +155,7 @@ const Body = () => {
             className="text-gray-500 hover:text-gray-700 px-3"
             onClick={() => {
               setSearchValue("");
-              toggleFilter("noop"); // Just to trigger re-filter
+              resetFilters();
             }}
           >
             <FaTimes />
@@ -210,11 +228,12 @@ const Body = () => {
 
       {/* Restaurant List */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
-        {restaurantsList.map((res) => (
-          <Link key={res.info.id} to={"/restaurants/" + res.info.id}>
-            <RestaurantCard resData={res} />
-          </Link>
-        ))}
+        {Array.isArray(restaurantsList) &&
+          restaurantsList.map((res) => (
+            <Link key={res.info.id} to={"/restaurants/" + res.info.id}>
+              <RestaurantCard resData={res} />
+            </Link>
+          ))}
       </div>
     </div>
   );

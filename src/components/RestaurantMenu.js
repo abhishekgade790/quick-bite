@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { CDN_URL, OFFER_LOGO_URL } from "../utils/constants";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { CDN_URL, OFFER_LOGO_URL } from "../utils/constants";
 import useFetchMenu from "../utils/useFetchMenu";
 import ShimmerUI from "./shimmerUI";
 import RestaurantCategory from "./RestaurantCategory";
@@ -8,28 +8,31 @@ import RestaurantCategory from "./RestaurantCategory";
 const RestaurantMenu = () => {
   const { resId } = useParams();
 
-  const { resInfo, offerCard, menuCard, categories, setMenuCard } =
-    useFetchMenu(resId);
+  const { resInfo, offerCard, categories, loading, error } = useFetchMenu(resId);
 
   const [showIndex, setShowIndex] = useState(null);
 
-  if (!resInfo) {
+  if (loading) {
+    return <ShimmerUI />;
+  }
+
+  if (error) {
     return (
-      <div className="text-center text-xl font-bold mt-10">
-        <ShimmerUI />
+      <div className="text-center text-xl font-bold text-red-500 mt-10">
+        {error}
       </div>
     );
   }
 
-  const {
-    name,
-    cuisines,
-    avgRating,
-    areaName,
-    costForTwoMessage,
-    totalRatingsString,
-    sla,
-  } = resInfo;
+  if (!resInfo) {
+    return (
+      <div className="text-center text-xl font-bold mt-10">
+        No restaurant info available.
+      </div>
+    );
+  }
+
+  const { name, cuisines, avgRating, areaName, costForTwoMessage, totalRatingsString, sla } = resInfo;
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 md:px-24">
@@ -50,31 +53,30 @@ const RestaurantMenu = () => {
       </div>
 
       {/* Offers */}
-      <div className="offer-container flex overflow-x-auto gap-4 p-4 scrollbar-hide">
-        {offerCard?.map(
-          ({ info: { couponCode, header, offerLogo, offerIds } }) => (
-            <div
-              className="offer-card flex min-w-[260px] items-center gap-3 p-4 rounded-lg bg-white shadow-md transition-transform duration-300 hover:scale-105"
-              key={offerIds[0]}
-            >
-              <img
-                className="w-12 h-12 object-contain"
-                src={`${OFFER_LOGO_URL}${offerLogo}`}
-                alt="offer-logo"
-              />
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800">
-                  {header}
-                </h3>
-                <p className="text-sm text-gray-600">{couponCode}</p>
+      {offerCard.length > 0 && (
+        <div className="offer-container flex overflow-x-auto gap-4 p-4 scrollbar-hide">
+          {offerCard.map(
+            ({ info: { couponCode, header, offerLogo, offerIds } }) => (
+              <div
+                className="offer-card flex min-w-[260px] items-center gap-3 p-4 rounded-lg bg-white shadow-md transition-transform duration-300 hover:scale-105"
+                key={offerIds[0]}
+              >
+                <img
+                  className="w-12 h-12 object-contain"
+                  src={`${OFFER_LOGO_URL}${offerLogo}`}
+                  alt="offer-logo"
+                />
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800">{header}</h3>
+                  <p className="text-sm text-gray-600">{couponCode}</p>
+                </div>
               </div>
-            </div>
-          )
-        )}
-      </div>
+            )
+          )}
+        </div>
+      )}
 
-      {/*restaurants categories  accordion*/}
-
+      {/* Restaurant Categories Accordion */}
       <div>
         {categories.map((category) => (
           <RestaurantCategory
