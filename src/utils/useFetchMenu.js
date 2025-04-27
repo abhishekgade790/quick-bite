@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { MENU_API } from "./constants";
+import { ITEMS_CATEGORY, MENU_API } from "./constants";
 
 const useFetchMenu = (resId) => {
   const [resInfo, setResInfo] = useState(null);
@@ -27,9 +27,7 @@ const useFetchMenu = (resId) => {
         ?.REGULAR || { cards: [] };
 
       const allItems = fetchedMenu.cards.filter(
-        (item) =>
-          item?.card?.card?.["@type"] ===
-          "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
+        (item) => item?.card?.card?.["@type"] === ITEMS_CATEGORY
       );
 
       setMenuCard(allItems);

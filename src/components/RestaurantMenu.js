@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CDN_URL } from "../utils/constants";
+import { CDN_URL, OFFER_LOGO_URL } from "../utils/constants";
 import { useParams } from "react-router-dom";
 import useFetchMenu from "../utils/useFetchMenu";
 import ShimmerUI from "./shimmerUI";
@@ -59,7 +59,7 @@ const RestaurantMenu = () => {
             >
               <img
                 className="w-12 h-12 object-contain"
-                src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_96,h_96/${offerLogo}`}
+                src={`${OFFER_LOGO_URL}${offerLogo}`}
                 alt="offer-logo"
               />
               <div>
