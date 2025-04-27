@@ -9,7 +9,7 @@ const GroceryPayment = () => {
   const cartItems = useSelector((state) => state.groceryCart.items);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [address, setAddress] = useState(""); // State for storing the address
+  const [address, setAddress] = useState("");
 
   const subTotal = cartItems.reduce((acc, item) => {
     const price = parseFloat(item.price.replace(/[^\d.]/g, ""));
@@ -35,7 +35,7 @@ const GroceryPayment = () => {
 
     setTimeout(() => {
       dispatch(clearGroceryItems());
-      navigate("/grocery-shop"); // After placing order, go back to shop
+      navigate("/grocery-shop");
     }, 2000);
   };
 
@@ -62,7 +62,21 @@ const GroceryPayment = () => {
         <div className="bg-gray-100 p-4 rounded-lg">
           <h2 className="text-2xl font-semibold mb-4">Bill Summary</h2>
 
-          <div className="flex justify-between py-2">
+          {/* List of Items */}
+          <div className="space-y-2 mb-4">
+            {cartItems.map((item) => (
+              <div key={item.id} className="flex justify-between items-center text-gray-700">
+                <span className="font-medium">
+                  {item.name} × {item.quantity}
+                </span>
+                <span>
+                  ₹{(parseFloat(item.price.replace(/[^\d.]/g, "")) * item.quantity).toFixed(2)}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex justify-between py-2 border-t pt-2">
             <span className="text-gray-700 font-medium">Subtotal:</span>
             <span>₹{subTotal.toFixed(2)}</span>
           </div>

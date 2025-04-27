@@ -16,8 +16,6 @@ const useFetch = () => {
 
         const data = await response.json();
 
-        console.log("Fetched Data:", data); // 👈 Add console to check what you are getting
-
         const fetchedRestaurants =
           data.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
 

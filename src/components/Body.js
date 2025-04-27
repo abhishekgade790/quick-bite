@@ -36,7 +36,6 @@ const Body = () => {
     }
   }, [resInfo]);
 
-  console.log("Restaurants List:", restaurantsList); // Debugging line to check restaurant list
 
   const toggleFilter = (key) => {
     const newFilters = { ...filters, [key]: !filters[key] };

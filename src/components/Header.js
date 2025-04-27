@@ -15,46 +15,43 @@ const Header = () => {
 
   return (
     <header className="bg-white text-gray-900 shadow-md sticky top-0 z-50">
-      <div className="flex justify-between items-center px-4 py-3 md:px-12 lg:px-24">
+      <div className="flex justify-between items-center px-4 py-2 md:px-12 lg:px-24">
         {/* Logo */}
-        <div className="w-20">
+        <div className="w-24">
           <Link to="/">
-            <img src={LOGO_URL} alt="logo" className="w-full" />
+            <img src={LOGO_URL} alt="logo" className="w-full object-contain" />
           </Link>
         </div>
 
         {/* Desktop Menu */}
-        <nav className="hidden md:flex gap-8 text-lg items-center list-none">
+        <nav className="hidden md:flex gap-10 text-lg items-center">
           <NavItems cartItemsCount={totalCartItems} isOnline={isOnline} />
         </nav>
 
-        {/* Mobile Menu Toggle */}
+        {/* Mobile Controls */}
         <div className="md:hidden flex items-center gap-4">
-          {/* Grocery Quick Access */}
           <Link to="/grocery">
-            <ShoppingBasket className="text-gray-700" />
+            <ShoppingBasket className="text-gray-700 hover:text-orange-500" />
           </Link>
-          {/* Cart Quick Access */}
           <Link to="/cart" className="relative">
-            <ShoppingCart className="text-gray-700" />
+            <ShoppingCart className="text-gray-700 hover:text-orange-500" />
             {totalCartItems > 0 && (
-              <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+              <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
                 {totalCartItems}
               </span>
             )}
           </Link>
-          {/* Menu Button */}
           <button onClick={() => setMenuOpen(!menuOpen)} className="text-gray-800">
             {menuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
       </div>
 
-      {/* Slide-in Mobile Menu */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {menuOpen && (
           <>
-            {/* Overlay */}
+            {/* Dim Background */}
             <motion.div
               className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
               onClick={() => setMenuOpen(false)}
@@ -63,16 +60,16 @@ const Header = () => {
               exit={{ opacity: 0 }}
             />
 
-            {/* Slide-in Panel */}
+            {/* Slide Menu */}
             <motion.nav
-              className="fixed top-0 right-0 w-3/4 sm:w-1/2 h-full bg-white z-50 shadow-xl px-6 py-8"
+              className="fixed top-0 right-0 w-3/4 sm:w-1/2 h-full bg-white z-50 shadow-xl p-8"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
-              {/* Quick Grocery + Cart buttons inside menu */}
-              <div className="flex justify-between mb-6">
+              {/* Quick Access Shortcuts */}
+              <div className="flex justify-between mb-8">
                 <Link to="/grocery" onClick={() => setMenuOpen(false)} className="flex items-center gap-1 text-sm text-gray-700 hover:text-orange-500">
                   <ShoppingBasket size={18} /> Grocery
                 </Link>
@@ -80,19 +77,15 @@ const Header = () => {
                   <ShoppingCart size={18} />
                   Cart
                   {totalCartItems > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                    <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
                       {totalCartItems}
                     </span>
                   )}
                 </Link>
               </div>
 
-              <ul className="flex flex-col gap-6 text-base font-medium">
-                <NavItems
-                  cartItemsCount={totalCartItems}
-                  isOnline={isOnline}
-                  onClick={() => setMenuOpen(false)}
-                />
+              <ul className="flex flex-col gap-8 text-lg font-semibold">
+                <NavItems cartItemsCount={totalCartItems} isOnline={isOnline} onClick={() => setMenuOpen(false)} />
               </ul>
             </motion.nav>
           </>
@@ -114,21 +107,21 @@ const NavItems = ({ cartItemsCount, isOnline, onClick }) => (
       <Link to="/contact" className="hover:text-orange-500 transition" onClick={onClick}>Contact</Link>
     </li>
     <li className="list-none">
-      <Link to="/grocery" className="hover:text-orange-500 transition" onClick={onClick}>
-        <ShoppingBasket size={16} className="inline mr-1" />
-        Grocery
+      <Link to="/grocery" className="hover:text-orange-500 transition flex items-center" onClick={onClick}>
+        <ShoppingBasket size={16} className="inline mr-1" /> Grocery
       </Link>
     </li>
     <li className="list-none">
-      <Link to="/cart" className="hover:text-orange-500 transition relative" onClick={onClick}>
-        <ShoppingCart size={16} className="inline mr-1" />
-        Cart ({cartItemsCount})
+      <Link to="/cart" className="hover:text-orange-500 transition flex items-center" onClick={onClick}>
+        <ShoppingCart size={16} className="inline mr-1" /> Cart ({cartItemsCount})
       </Link>
     </li>
     <li className="list-none">
       <Link to="/login" className="hover:text-orange-500 transition" onClick={onClick}>Login</Link>
     </li>
-    <li className="list-none text-sm text-gray-600">{isOnline ? "🟢 Online" : "🔴 Offline"}</li>
+    <li className="list-none text-sm text-gray-600">
+      {isOnline ? <span className="text-green-600">🟢 Online</span> : <span className="text-red-600">🔴 Offline</span>}
+    </li>
   </>
 );
 

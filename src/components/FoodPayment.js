@@ -1,13 +1,15 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { clearItems } from "../store/cartSlice";
 
 const FoodPayment = () => {
   const cartItems = useSelector((state) => state.cart.items);
   const navigate = useNavigate();
-  const [address, setAddress] = useState(""); // State for storing the address
+  const [address, setAddress] = useState("");
+  const dispatch = useDispatch();
 
   const subTotal = cartItems.reduce((total, item) => {
     const price = item.card.info.price
@@ -34,12 +36,13 @@ const FoodPayment = () => {
     toast.success("Payment Successful! 🎉");
 
     setTimeout(() => {
-      navigate("/"); // After payment, go back to home page
+      navigate("/");
+      dispatch(clearItems());
     }, 2000);
   };
 
   return (
-    <div className="max-w-2xl mx-auto my-10 px-8 py-10 bg-white rounded-xl shadow-md min-h-[80vh]">
+    <div className="max-w-3xl mx-auto my-10 p-6 bg-white rounded-xl shadow-md min-h-[80vh]">
       <h1 className="text-3xl font-bold text-center mb-8 text-orange-500">
         Payment Summary
       </h1>
@@ -56,29 +59,11 @@ const FoodPayment = () => {
         </div>
       ) : (
         <div className="space-y-6">
-          {/* Item List */}
-          <div className="space-y-4">
-            {cartItems.map((item) => (
-              <div
-                key={item.card.info.id}
-                className="flex justify-between border-b pb-2"
-              >
-                <span className="font-medium">{item.card.info.name}</span>
-                <span className="font-semibold">
-                  ₹
-                  {(
-                    (item.card.info.price || item.card.info.defaultPrice) /
-                      100 *
-                      item.quantity
-                  ).toFixed(2)}
-                </span>
-              </div>
-            ))}
-          </div>
-
           {/* Address Input */}
           <div className="flex flex-col mt-8">
-            <label className="text-lg font-semibold mb-2">Delivery Address:</label>
+            <label className="text-lg font-semibold mb-2">
+              Delivery Address:
+            </label>
             <textarea
               className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
               rows="3"
@@ -88,17 +73,44 @@ const FoodPayment = () => {
             ></textarea>
           </div>
 
-          {/* Bill Details */}
-          <div className="mt-8 border-t-2 pt-4 space-y-2">
-            <div className="flex justify-between">
-              <span className="text-lg">Subtotal:</span>
-              <span className="text-lg font-medium">₹{subTotal.toFixed(2)}</span>
+          {/* Bill Section */}
+          <div className="bg-gray-100 p-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-semibold mb-4">Bill Summary</h2>
+
+            {/* Item List */}
+            <div className="space-y-2 mb-4">
+              {cartItems.map((item) => (
+                <div
+                  key={item.card.info.id}
+                  className="flex justify-between items-center text-gray-700"
+                >
+                  <span className="font-medium">
+                    {item.card.info.name} × {item.quantity}
+                  </span>
+                  <span>
+                    ₹
+                    {(
+                      ((item.card.info.price || item.card.info.defaultPrice) /
+                        100) *
+                      item.quantity
+                    ).toFixed(2)}
+                  </span>
+                </div>
+              ))}
             </div>
-            <div className="flex justify-between">
-              <span className="text-lg">Tax (10%):</span>
-              <span className="text-lg font-medium">₹{tax.toFixed(2)}</span>
+
+            {/* Subtotal, Tax, Total */}
+            <div className="flex justify-between py-2 border-t pt-2">
+              <span className="text-gray-700 font-medium">Subtotal:</span>
+              <span>₹{subTotal.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between border-t pt-3">
+
+            <div className="flex justify-between py-2">
+              <span className="text-gray-700 font-medium">Tax (10%):</span>
+              <span>₹{tax.toFixed(2)}</span>
+            </div>
+
+            <div className="flex justify-between py-4 border-t mt-4">
               <span className="text-xl font-bold">Total Amount:</span>
               <span className="text-xl font-bold text-green-600">
                 ₹{totalAmount.toFixed(2)}
