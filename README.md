@@ -4,6 +4,9 @@
 QuickBite is a responsive and dynamic Food Delivery Web Application built with React, Redux, Tailwind CSS, and parcel.
 It allows users to browse restaurants, add food or grocery items to the cart, and securely place orders.
 
+### Live Applicaton
+Frontend is live at: [quick-bite.app](https://quike-bite.web.app)
+
 ## ✨ Features
 - 🍽️ Browse Restaurants and Groceries
 - 🛒 Add/Remove items to Cart
@@ -66,7 +69,7 @@ Open your browser and visit:
 👉 `http://localhost:5173`
 
 ## 📦 Deployment
-- Frontend is live at: [https://quike-bite.web.app](https://quike-bite.web.app)
+- Frontend is live at: [quick-bite.app](https://quike-bite.web.app)
 - Proxy server is already deployed on Render.
 
 ## 🙌 Acknowledgements
